@@ -1,0 +1,79 @@
+`timescale 1ns / 1ps
+module alu_16bit (
+    input  [15:0] A, B,
+    input  [3:0]  Sel,
+    output reg [15:0] ALU_Out,
+    output reg CarryOut
+);
+
+always @(*) begin
+    CarryOut = 0;
+    case (Sel)
+        4'b0000: 
+        begin // ADD
+            {CarryOut, ALU_Out} = A + B;
+        end
+        4'b0001: 
+        begin // SUB
+            {CarryOut, ALU_Out} = A - B;
+        end
+        4'b0010: 
+        begin // AND
+            ALU_Out = A & B;
+        end
+        4'b0011: 
+        begin // OR
+            ALU_Out = A | B;
+        end
+        4'b0100: 
+        begin // XOR
+            ALU_Out = A ^ B;
+        end
+        4'b0101: 
+        begin // NOT
+            ALU_Out = ~A;
+        end
+        4'b0110: 
+        begin // INC
+            ALU_Out = A + 1;
+        end
+        4'b0111: 
+        begin // DEC
+            ALU_Out = A - 1;
+        end
+        4'b1000: 
+        begin // SHIFT LEFT
+            ALU_Out = A << 1;
+        end
+        4'b1001:
+         begin // SHIFT RIGHT
+            ALU_Out = A >> 1;
+        end
+        4'b1010: 
+        begin // MULTIPLY (LSB 16 bits)
+            ALU_Out = A * B;
+        end
+        4'b1011: 
+        begin // PASS A
+            ALU_Out = A;
+        end
+        4'b1100: 
+        begin // PASS B
+            ALU_Out = B;
+        end
+        4'b1101:
+        begin // NAND
+            ALU_Out = ~(A & B);
+        end
+        4'b1110: 
+        begin // NOR
+            ALU_Out = ~(A | B);
+        end
+        4'b1111: 
+        begin 
+            ALU_Out = ~(A ^ B);  // XNOR
+        end
+        default: ALU_Out = 16'b0;
+    endcase
+end
+endmodule
